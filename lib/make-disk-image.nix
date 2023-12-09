@@ -14,10 +14,7 @@ let
       boot.loader.grub.devices = lib.mkForce cleanedConfig.boot.loader.grub.devices;
     }];
   };
-  vmTools = import "${pkgs}/pkgs/build-support/vm" {
-    inherit pkgs lib;
-    rootModules = [ "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_balloon" "virtio_rng" "ext4" "unix" "9p" "9pnet_virtio" "crc32c_generic" "zfs" ];
-  };
+  vmTools = vmTools.override { rootModules = [ "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_balloon" "virtio_rng" "ext4" "unix" "9p" "9pnet_virtio" "crc32c_generic" "zfs" ]; };
   dependencies = with pkgs; [
     bash
     coreutils
