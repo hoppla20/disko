@@ -14,7 +14,7 @@ let
       boot.loader.grub.devices = lib.mkForce cleanedConfig.boot.loader.grub.devices;
     }];
   };
-  customVmTools = vmTools.override { rootModules = [ "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_balloon" "virtio_rng" "ext4" "unix" "9p" "9pnet_virtio" "crc32c_generic" "zfs" ]; };
+  vmTools = pkgs.vmTools.override { rootModules = [ "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_balloon" "virtio_rng" "ext4" "unix" "9p" "9pnet_virtio" "crc32c_generic" "zfs" ]; };
   dependencies = with pkgs; [
     bash
     coreutils
@@ -62,7 +62,7 @@ let
   QEMU_OPTS = lib.concatMapStringsSep " " (disk: "-drive file=${disk.name}.raw,if=virtio,cache=unsafe,werror=report") (lib.attrValues nixosConfig.config.disko.devices.disk);
 in
 {
-  pure = customVmTools.runInLinuxVM (pkgs.runCommand name
+  pure = vmTools.runInLinuxVM (pkgs.runCommand name
     {
       buildInputs = dependencies;
       inherit preVM postVM QEMU_OPTS;
@@ -161,7 +161,7 @@ in
     QEMU_OPTS+=" -m $build_memory"
     export QEMU_OPTS
 
-    ${pkgs.bash}/bin/sh -e ${customVmTools.vmRunCommand customVmTools.qemuCommandLinux}
+    ${pkgs.bash}/bin/sh -e ${vmTools.vmRunCommand vmTools.qemuCommandLinux}
     cd /
   '';
 }
