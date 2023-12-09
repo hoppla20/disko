@@ -15,7 +15,7 @@ let
     }];
   };
   vmTools = pkgs.vmTools.override {
-    kernel = nixosConfig.config.boot.zfs.package.latestCompatibleLinuxPackages;
+    kernel = nixosConfig.config.boot.zfs.package.latestCompatibleLinuxPackages.kernel;
     rootModules = [ "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_balloon" "virtio_rng" "ext4" "unix" "9p" "9pnet_virtio" "crc32c_generic" "zfs" ];
   };
   dependencies = with pkgs; [
@@ -26,6 +26,7 @@ let
     systemdMinimal
     nix
     util-linux
+    nixosConfig.config.boot.zfs.package.latestCompatibleLinuxPackages.zfs
   ];
   preVM = ''
     ${lib.concatMapStringsSep "\n" (disk: "truncate -s ${disk.imageSize} ${disk.name}.raw") (lib.attrValues nixosConfig.config.disko.devices.disk)}
