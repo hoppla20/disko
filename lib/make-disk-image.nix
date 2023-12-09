@@ -22,6 +22,7 @@ let
     systemdMinimal
     nix
     util-linux
+    zfs
   ];
   preVM = ''
     ${lib.concatMapStringsSep "\n" (disk: "truncate -s ${disk.imageSize} ${disk.name}.raw") (lib.attrValues nixosConfig.config.disko.devices.disk)}
